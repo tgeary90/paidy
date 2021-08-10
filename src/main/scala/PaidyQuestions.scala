@@ -1,3 +1,6 @@
+import java.time.{DayOfWeek, LocalDate}
+import java.time.format.DateTimeFormatter
+
 object PaidyQuestions {
 
   def ordinalSuffix(x: Int): String = {
@@ -11,5 +14,19 @@ object PaidyQuestions {
         case _ :: tail                    => go(tail)
       }
     go(x.toString.toList)
+  }
+
+  def sundays(start: String, end: String): Int = {
+    val df: DateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    val startDt: LocalDate    = LocalDate.parse(start, df)
+    val endDt: LocalDate      = LocalDate.parse(end, df)
+
+    def go(dt: LocalDate): Int = {
+      if (dt.isBefore(endDt) || dt.isEqual(endDt)) {
+        if (dt.getDayOfWeek == DayOfWeek.SUNDAY) go(dt.plusDays(1)) + 1
+        else go(dt.plusDays(1)) + 0
+      } else 0
+    }
+    go(startDt)
   }
 }

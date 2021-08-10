@@ -30,4 +30,10 @@ class PaidyQuestionsTest extends org.scalatest.funsuite.AnyFunSuite {
     assert(PaidyQuestions.ordinalSuffix(5)        === "5th")
     assert(PaidyQuestions.ordinalSuffix(2349)     === "2349th")
   }
+
+  test("SuffixTest_negative_and_zero") {
+    assert(PaidyQuestions.ordinalSuffix(-1) == "-1st")
+    assert(PaidyQuestions.ordinalSuffix(-22) == "-22nd")
+    assert(PaidyQuestions.ordinalSuffix(0) == "0th")
+  }
 }
