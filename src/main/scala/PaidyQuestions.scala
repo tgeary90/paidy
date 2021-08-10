@@ -29,4 +29,34 @@ object PaidyQuestions {
     }
     go(startDt)
   }
+
+  def mask(input: String): String = {
+    val LocalPartPattern = "(\\w*)@\\w.*\\.*".r
+    val PhoneNumPattern = "([\\d{9,} +]*)".r
+
+    def obfuscateEmail(str: String): String = {
+      if (str.length < 2) "*****"
+      else {
+        val startChar     = str.take(1)
+        val endChar       = str.takeRight(1)
+        List(startChar, "*****", endChar).mkString
+      }
+    }
+
+    def obfuscatePhone(str: String): String = {
+      val Suffix = ".*(\\d-\\d{3}$)".r
+      val cleanedOfSpaces = str.replaceAll(" ", "-")
+      val suffix = cleanedOfSpaces match {
+        case Suffix(last4Digits) => last4Digits
+      }
+      val cleanedOfDigits = cleanedOfSpaces.replaceAll("\\d", "*")
+      cleanedOfDigits.dropRight(5) + suffix
+    }
+
+    val masked = input match {
+      case PhoneNumPattern(pn) => obfuscatePhone(pn)
+      case LocalPartPattern(lpp) => input.replaceAll("\\w*@", obfuscateEmail(lpp) + "@")
+    }
+    masked
+  }
 }
